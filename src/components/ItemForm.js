@@ -1,11 +1,32 @@
 import React, { useState } from "react";
 
-function ItemForm() {
+function ItemForm({onAddItem}) {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("Produce");
+  // const [newItem, setItem] = useState("");
 
+
+   function handleSubmit(e){
+    e.preventDefault();
+    const itemData ={
+      name: name ,
+    category: category,
+    isInCart: false,
+    };
+    console.log(itemData);
+    fetch("http://localhost:4000/items",{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(itemData),
+    })
+    .then((r) => r.json())
+    .then((newItem) => onAddItem(newItem));
+    
+   }
   return (
-    <form className="NewItem">
+    <form className="NewItem" onSubmit={handleSubmit}>
       <label>
         Name:
         <input
@@ -29,7 +50,7 @@ function ItemForm() {
         </select>
       </label>
 
-      <button type="submit">Add to List</button>
+      <button type="submit" >Add to List</button>
     </form>
   );
 }
